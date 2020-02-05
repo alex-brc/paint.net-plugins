@@ -1,22 +1,25 @@
 // Name: Radial Distortion
-// Submenu: Effects
+// Submenu: Distort
 // Author: brc.xyz
 // Title: Radial Distortion
-// Version: v0.2
-// Desc: Perform radial distortion on the selection. Supports quadratic and quartic factors. Supports bilinear interpolation for anti-aliased results. 
-// Keywords:
+// Version: 0.23
+// Desc: Radially distort the selection. 
+// Keywords: radial|distortion|radius|distort|barrel|pincushion
 // URL: https://brc.xyz/
-// Help: This effect uses the Brown-Conrady correction model with two K parameter (K_1, K_2). The values for the distortion factors are multiplied by -1E-6 and -1E-12 respectively. 
+// Help:
 #region UICode
 DoubleSliderControl k1 = 3; // [-10,10] Quadratic distortion factor
-DoubleSliderControl k2 = 0; // [-100,100] Quartic distortion factor
 CheckboxControl bilinear = true; // Anti-aliasing
 #endregion
 
 ColorBgra zeroPixel;
 void PreRender(Surface dst, Surface src){
-    k1 *= -1E-6; 
-    k2 *= -1E-12;
+    k1 *= -0.1; 
+    // Adjust for image size
+    double scaler = Math.Max(src.Width, src.Height);
+    scaler *= scaler;
+    k1 /= scaler;
+
     zeroPixel.B = zeroPixel.G = 
     zeroPixel.R = zeroPixel.A = 0;
 }
@@ -42,10 +45,9 @@ void Render(Surface dst, Surface src, Rectangle rect)
             ys = y - CenterY;
 
             // Distance from center for this point;
-            r2 = xs*xs + ys*ys; // r squared
-            r4 = r2 * r2;
+            r2 = xs*xs + ys*ys; // r square
             // Find source pixel position to send to dst[x,y]
-            c = 1 + k1 * r2 + k2 * r4;
+            c = 1 + k1 * r2;
             xd = xs * c;
             yd = ys * c;
             

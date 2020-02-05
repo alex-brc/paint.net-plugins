@@ -80,13 +80,3 @@ private static ColorBgra bilinearInterpolate(ColorBgra[] pixels, float xi, float
 
     return ColorBgra.Lerp(t1, t2, yi);
 }
-
-
-            // CurrentPixel = src[x,y];
-            // TODO: Add pixel processing code here
-            // Access RGBA values this way, for example:
-            // CurrentPixel.R = PrimaryColor.R;
-            // CurrentPixel.G = PrimaryColor.G;
-            // CurrentPixel.B = PrimaryColor.B;
-            // CurrentPixel.A = PrimaryColor.A;
-            // dst[x,y] = CurrentPixel;
